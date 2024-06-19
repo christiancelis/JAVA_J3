@@ -1,0 +1,323 @@
+package com.ahorcado;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+
+        String seleccion = "0";
+        int random = 0;
+        String p1 = "";
+        String p2 = "";
+        Main def = new Main();
+
+        ArrayList<String> palabras = new ArrayList<String>();
+        palabras.add("invento");
+        palabras.add("caramelo");
+        palabras.add("pinguino");
+        palabras.add("leon");
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("\r\n" + //
+                "░█████╗░██╗░░██╗░█████╗░██████╗░░█████╗░░█████╗░██████╗░░█████╗░\r\n" + //
+                "██╔══██╗██║░░██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗\r\n" + //
+                "███████║███████║██║░░██║██████╔╝██║░░╚═╝███████║██║░░██║██║░░██║\r\n" + //
+                "██╔══██║██╔══██║██║░░██║██╔══██╗██║░░██╗██╔══██║██║░░██║██║░░██║\r\n" + //
+                "██║░░██║██║░░██║╚█████╔╝██║░░██║╚█████╔╝██║░░██║██████╔╝╚█████╔╝\r\n" + //
+                "╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚═════╝░░╚════╝░\t");
+        System.out.println("--------------------------------------------------------------");
+
+        while (!seleccion.equals("2")) {
+            seleccion = "0";
+
+            random = def.GenerarNumeroRandom(palabras.size());
+            p1=palabras.get(random-1);
+            p2=def.generarEspacios(p1.length(),false,"");
+
+            def.imprimirMenu();
+
+            try {
+                System.out.print("Digite opcion: ");
+                seleccion = sc.nextLine();
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            switch (seleccion) {
+                case "1":
+                    System.out.println("\nIngresando al juego......");
+                    def.Partida(p1,p2,def,sc);
+                    break;
+                case "2":
+                    System.out.println("\nSaliendo del Juego......");
+                    return;
+                default:
+                    System.out.println("\nError Opcion no Disponible");
+                    continue;
+            }
+
+            System.out.println("Desea Continuar Jugando? si:0   No: Cualquier Caracter");
+
+            seleccion = def.leerOpcion("Digite opcion: ", sc);
+
+            if (!seleccion.equals("0")) {
+                System.out.println("Saliendo.......");
+                return;
+            }
+        }
+        sc.close();
+    }
+
+
+    private String leerOpcion(String msg ,Scanner es ){
+        
+        String seleccion = "";
+
+        try {
+            System.out.print(msg);
+            seleccion = es.nextLine();
+            es.nextLine();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return seleccion;
+    }
+
+
+    private void Partida(String p1, String p2, Main df, Scanner es) {
+        int totalintentos = 3;
+        int intentos=3;
+        String letra = "";
+        String temp="";
+        boolean bandera;
+
+    
+        ArrayList <String> letras = new ArrayList <String>();
+
+        System.out.println( "\n--------------------------------------------------------------------------------------------");
+        System.out.println("   MINI JUEGO AHORCADO  ");
+        System.out.println( "\n--------------------------------------------------------------------------------------------\n");
+        while (intentos>=0) {
+          
+            System.out.println( "-------------------------");
+            System.out.println("Intentos Totales: " + totalintentos);
+            System.out.println("Intentos Restantes: "+ intentos);
+            System.out.println( "-------------------------");
+           
+            df.ImprimirAhorcado(intentos);
+
+            if(intentos>0){
+                temp="";
+                if(df.comprobacionganador(letras,p1)){
+                    System.out.println("\n---------------------------------------");
+                    System.out.println("Felicitaciones, Ganaste");
+                    System.out.println("---------------------------------------");
+                    return;
+                }else{
+                    bandera = false;   
+                    System.out.println("Adivina la palabra\n");
+                    System.out.println(p2);
+                    letra = df.leerOpcion("\nDigite una letra: ", es).toLowerCase();
+                    if(letra.length()>1 || letra.isEmpty() || Character.isDigit(letra.charAt(0))){
+                        System.out.println("\n----------------------------------------------------------------------");
+                        System.out.println("Error, al digitar la letra, no debe ser vacio o contenermas de una letra o ser un numero");
+                        System.out.println("-------------------------------------------------------------------------");
+                        continue;
+                    }else{
+                        temp = df.VerificarLetraenpalabra(letra,p1,p2);
+                    }
+                    
+                }
+
+               
+
+                if(!p2.equals(temp) && !letras.contains(letra)){
+                    p2=temp;
+                    bandera = true;
+                    System.out.println("");
+                    letras.add(letra);
+                    System.out.println("\n---------------------------------------");
+                    System.out.println("La letra "+ letra + " se encuentra en la palabra" );
+                    System.out.println("---------------------------------------\n");
+                }
+                if(temp.equals(p2) && bandera !=true){
+                    intentos --;
+                    System.out.println("\n---------------------------------------");
+                    System.out.println("La letra es Incorrecta");
+                    System.out.println("---------------------------------------\n");
+                }
+
+                if(letras.contains(letra) && bandera!=true){
+                    System.out.println("\n---------------------------------------");
+                    System.out.println("La letra ya ha sido digitada");
+                    System.out.println("---------------------------------------");
+                    continue;
+                }
+
+               
+            }
+            else{
+                String temporal = "";
+                temporal = p1;
+                System.out.println("\nLa palabra era: "+ p1);
+                p2 = df.generarEspacios(p1.length(), true,p1);
+                System.out.println(p2);
+                p1= temporal;
+                temporal = "";
+                intentos --;
+            }
+
+            }
+            System.out.println( "--------------------------------------------------------------------------------------------");
+
+    }
+
+private boolean comprobacionganador( ArrayList <String> letras, String tem){
+    
+    int contador = 0;
+    for (String letra : letras) {
+        for(int i=0;i<tem.length();i++){
+                if(letra.equals(String.valueOf(tem.charAt(i)))){
+                    contador ++;
+                }
+            }         
+        }
+
+        if(tem.length()==contador){
+            return true;
+        }else{
+            return false;
+        }
+    
+}
+
+  
+private String VerificarLetraenpalabra(String letra,String p1,String p2){
+    int posicion=0;
+    char[] palabra = p2.toCharArray();
+    for(int i=1;i<=p1.length();i++){
+        if(String.valueOf(p1.charAt(i-1)).equals(letra)){
+            posicion= ((i*3)-2);
+            palabra[posicion] = letra.charAt(0); 
+        }
+    }
+    p2 = String.valueOf(palabra);
+    return p2;
+}
+
+  //  _  _ 
+
+    private String generarEspacios(int tamaño, boolean bandera,String p1){
+        String palabra = "";
+        for(int i=0; i<tamaño;i++){
+            if(bandera==true){
+                palabra += " "+p1.charAt(i)+" ";
+            }else{
+                palabra += " _ ";
+            }
+            
+        }
+        return palabra;
+    }
+
+
+
+    private int GenerarNumeroRandom(int RangoMaximo) {
+        int NumeroRandom = 0;
+        NumeroRandom = (int) (Math.random() * RangoMaximo) + 1;
+        return NumeroRandom;
+    }
+
+    private void imprimirMenu() {
+
+        System.out.println("\n------------------------ ");
+        System.out.println("1.Iniciar Juego\t");
+        System.out.println("2.Salir del Juego\t");
+        System.out.println("------------------------ \n");
+    }
+
+    private void ImprimirAhorcado(int intento) {
+
+        switch (intento) {
+            case 3:
+                System.out.println(" ---------------------");
+                System.out.println(" |                     |");
+                System.out.println(" |                     |");
+                System.out.println(" | ");
+                System.out.println(" | ");
+                System.out.println(" | ");
+                System.out.println(" | ");
+                for (int i = 0; i <= 10; i++) {
+                    System.out.println(" |");
+                }
+                System.out.println("__________");
+                break;
+            case 2:
+                System.out.println(" ---------------------");
+                System.out.println(" |                     |");
+                System.out.println(" |                     |");
+                System.out.println(" |                  -------");
+                System.out.println(" |                 | -  -  |");
+                System.out.println(" |                 |   o   |");
+                System.out.println(" |                  -------");
+                for (int i = 0; i <= 10; i++) {
+                    System.out.println(" |");
+                }
+                System.out.println("__________");
+                break;
+            case 1:
+                System.out.println(" ---------------------");
+                System.out.println(" |                     |");
+                System.out.println(" |                     |");
+                System.out.println(" |                  -------");
+                System.out.println(" |                 | -  -  |");
+                System.out.println(" |                 |   o   |");
+                System.out.println(" |                  -------");
+                System.out.println(" |                     |   ");
+                System.out.println(" |                   / | \\ ");
+                System.out.println(" |                  /  |   \\ ");
+                System.out.println(" |                 /   |     \\ ");
+                System.out.println(" |                     |   ");
+                for (int i = 0; i <= 5; i++) {
+                    System.out.println(" |");
+
+                }
+                System.out.println("__________");
+
+                break;
+
+            case 0:
+                System.out.println(" ---------------------");
+                System.out.println(" |                     |");
+                System.out.println(" |                     |");
+                System.out.println(" |                  -------");
+                System.out.println(" |                 | X  X  |");
+                System.out.println(" |                 |   o   |");
+                System.out.println(" |                  -------");
+                System.out.println(" |                     |   ");
+                System.out.println(" |                   / | \\ ");
+                System.out.println(" |                  /  |   \\ ");
+                System.out.println(" |                 /   |     \\ ");
+                System.out.println(" |                     |   ");
+                System.out.println(" |                    / \\");
+                System.out.println(" |                   /   \\  ");
+                System.out.println(" |                  /     \\ ");
+                for (int i = 0; i <= 2; i++) {
+                    System.out.println(" |");
+
+                }
+                System.out.println("__________");
+                System.out.println("Has Perdido! Fin del Juego..");
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+}
