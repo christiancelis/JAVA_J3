@@ -122,7 +122,7 @@ public class Main {
                     System.out.println("Adivina la palabra\n");
                     System.out.println(p2);
                     letra = df.leerOpcion("\nDigite una letra: ", es);
-                    if(letra.length()>1 || letra.isEmpty()){
+                    if(letra.length()>1 || letra.isEmpty() || Character.isDigit(letra.charAt(0))){
                         System.out.println("\n----------------------------------------------------------------------");
                         System.out.println("Error, al digitar la letra, no debe ser vacio o contenermas de una letra");
                         System.out.println("-------------------------------------------------------------------------");
