@@ -1,9 +1,9 @@
 package com.intro;
-import java.text.MessageFormat;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+// import java.text.MessageFormat;
+// import java.util.InputMismatchException;
+// import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+// import javax.swing.JOptionPane;
 
 public class Main {
     public static void main(String[] args) {
