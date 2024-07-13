@@ -16,7 +16,6 @@ public class UserRepository implements UserService{
         try (
             Connection connection = DatabaseConfig.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS)){
-
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.executeUpdate();
